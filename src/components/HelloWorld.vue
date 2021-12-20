@@ -31,11 +31,13 @@
 </template>
 
 <script>
+import { component } from 'vue/types/umd'
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
   }
+  
 }
 </script>
 
