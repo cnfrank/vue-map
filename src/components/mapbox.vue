@@ -152,7 +152,7 @@ export default {
       const lon = 120.106164
       const lat = 30.880402
       const profile = 'cycling' // Set the default routing profile
-      const minutes = 5 // Set the default duration
+      const minutes = 10 // Set the default duration
       // Create a function that sets up the Isochrone API query then makes an fetch call
       async function getIso() {
         const query = await fetch(
