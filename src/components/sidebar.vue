@@ -47,6 +47,7 @@ export default {
   left: 20px;
   z-index: 100;
 
-  width: 100%;
+  width: 300px;
 }
+@import url("https://api.mapbox.com/mapbox-assembly/v1.3.0/assembly.min.css");
 </style>
