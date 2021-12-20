@@ -23,8 +23,8 @@ export default {
   data() {
     return {}
   },
-  //   load() {
-
+  //   load(){
+  //       console.log("loaded!")
   //   },
   mounted() {
     this.init()
@@ -40,7 +40,7 @@ export default {
         center: [120.106164, 30.880402], //[longitude经度,latitude纬度]
         zoom: 15, // starting zoom
       })
-      console.log(map)
+      //   console.log(map)
       map.addControl(new mapboxgl.FullscreenControl())
 
       const nav = new mapboxgl.NavigationControl({
@@ -61,8 +61,8 @@ export default {
         console.log('popup was opened')
       })
 
-    //   map.scrollZoom.enable()
-    //   map.DragPanHandler.disable()
+      //   map.scrollZoom.enable()
+      //   map.DragPanHandler.disable()
 
       // Create a new marker.
       //   mapboxgl.Marker({
@@ -141,6 +141,59 @@ export default {
           .setLngLat(marker.geometry.coordinates)
           .addTo(map)
       }
+
+      // const urlBase="https://api.mapbox.com/isochrone/v1/mapbox/"
+      // const profile="driving"
+      // const lon="120.106604"
+      // const lat="30.885613"
+      // const minutes="5"
+
+      const urlBase = 'https://api.mapbox.com/isochrone/v1/mapbox/'
+      const lon = 120.106164
+      const lat = 30.880402
+      const profile = 'cycling' // Set the default routing profile
+      const minutes = 5 // Set the default duration
+      // Create a function that sets up the Isochrone API query then makes an fetch call
+      async function getIso() {
+        const query = await fetch(
+          `${urlBase}${profile}/${lon},${lat}?contours_minutes=${minutes}&polygons=true&access_token=${mapboxgl.accessToken}`,
+          { method: 'GET' }
+        )
+        const data = await query.json()
+        // console.log(data)
+        // console.log(data)
+        map.getSource('iso').setData(data);
+      }
+
+     
+
+      map.on('load', () => {
+        // When the map loads, add the source and layer
+        map.addSource('iso', {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: [],
+          },
+        })
+
+        map.addLayer({
+          id: 'isoLayer',
+          type: 'fill',
+          // Use "iso" as the data source for this layer
+          source: 'iso',
+          layout: {},
+          paint: {
+            // The fill color for the layer is set to a light purple
+            'fill-color': '#5a3fc0',
+            'fill-opacity': 0.3,
+          },
+        })
+
+        // Make the API call
+        getIso()
+        // map.getSource('iso').setData(data);
+      })
     },
 
     // Add the control to the map.
